@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>散步街屋與廢墟典藏 | Historic Architecture & Ruins Archive</title>
+  <style>
+    /* --- 水墨留白與東方美學設定 --- */
+    :root {
+      --bg-paper: #f5f0e6;          /* 宣紙色（微泛黃米色） */
+      --bg-card: #faf7f2;           /* 卡片微白宣紙色 */
+      --text-ink: #1c1a17;           /* 深墨色 */
+      --text-muted: #666056;         /* 淡墨色 */
+      --text-light: #999185;         /* 煙灰墨 */
+      --accent-vermilion: #a63a3a;   /* 胭脂紅（印泥朱紅） */
+      --accent-vermilion-hover: #8a2e2e;
+      --border-ink: #e0d8cb;         /* 墨韻灰邊框 */
+      --border-hover: #b5a895;
+      --font-serif: "Noto Serif TC", "Songti TC", "PMingLiU", "Georgia", serif;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-paper);
+      color: var(--text-ink);
+      font-family: var(--font-serif);
+      line-height: 1.85;
+      letter-spacing: 0.04em;
+      padding-bottom: 100px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 頂部標頭 - 極簡水墨留白 */
+    .hero-header {
+      padding: 100px 24px 70px 24px;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero-stamp {
+      display: inline-block;
+      color: var(--accent-vermilion);
+      border: 1px solid var(--accent-vermilion);
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      letter-spacing: 0.2em;
+      margin-bottom: 16px;
+      font-family: var(--font-sans);
+    }
+
+    .hero-title {
+      font-size: 2.3rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      color: var(--text-ink);
+      margin-bottom: 8px;
+    }
+
+    .hero-subtitle-en {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .hero-quote {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 2.1;
+      position: relative;
+      display: inline-block;
+    }
+
+    /* 懸浮固定圓形加號按鈕 (FAB) - 胭脂紅朱印風格 */
+    .fab-add-btn {
+      position: fixed;
+      bottom: 36px;
+      right: 36px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background-color: var(--accent-vermilion);
+      color: #ffffff;
+      border: none;
+      font-size: 30px;
+      font-weight: 300;
+      line-height: 58px;
+      text-align: center;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(166, 58, 58, 0.35);
+      z-index: 99;
+      transition: all 0.35s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      outline: none;
+    }
+
+    .fab-add-btn:hover {
+      background-color: var(--accent-vermilion-hover);
+      transform: scale(1.08) rotate(90deg);
+      box-shadow: 0 8px 30px rgba(166, 58, 58, 0.5);
+    }
+
+    .fab-tooltip {
+      position: fixed;
+      bottom: 48px;
+      right: 104px;
+      background: var(--text-ink);
+      color: var(--bg-paper);
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      padding: 6px 14px;
+      border-radius: 2px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      white-space: nowrap;
+      z-index: 99;
+    }
+
+    .fab-add-btn:hover + .fab-tooltip {
+      opacity: 0.9;
+    }
+
+    /* 主要容器 */
+    .main-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* 搜尋與篩選器 */
+    .filter-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-ink);
+      padding: 32px 28px;
+      margin-bottom: 60px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      align-items: end;
+      box-shadow: 0 4px 25px rgba(28, 26, 23, 0.03);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    .form-label span {
+      color: var(--text-light);
+      margin-left: 4px;
+    }
+
+    input[type="text"], select, input[type="date"], textarea {
+      width: 100%;
+      padding: 10px 12px;
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: var(--text-ink);
+      background: var(--bg-paper);
+      border: 1px solid var(--border-ink);
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus, select:focus, textarea:focus {
+      border-color: var(--accent-vermilion);
+      background: #ffffff;
+    }
+
+    .btn-search {
+      background: transparent;
+      border: 1px solid var(--border-ink);
+      color: var(--text-ink);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .btn-search:hover {
+      background: var(--text-ink);
+      color: var(--bg-paper);
+      border-color: var(--text-ink);
+    }
+
+    /* 網格與卡片 */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 40px 30px;
+    }
+
+    .card-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-ink);
+      transition: all 0.4s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .card-item:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-hover);
+      box-shadow: 0 12px 35px rgba(28, 26, 23, 0.07);
+    }
+
+    /* 照片水墨效果：高對比灰階預設，Hover 時還原色彩 */
+    .card-img-wrapper {
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+      background-color: #e5dfd3;
+      position: relative;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(100%) contrast(120%) brightness(95%);
+      transition: filter 0.6s ease, transform 0.6s ease;
+    }
+
+    .card-item:hover .card-img {
+      filter: grayscale(0%) contrast(100%) brightness(100%);
+      transform: scale(1.04);
+    }
+
+    .card-category-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(245, 240, 230, 0.92);
+      color: var(--accent-vermilion);
+      border: 1px solid rgba(166, 58, 58, 0.3);
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      padding: 3px 10px;
+    }
+
+    .card-content {
+      padding: 28px 24px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 400;
+      margin-bottom: 12px;
+      color: var(--text-ink);
+      line-height: 1.4;
+    }
+
+    .card-meta {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .card-footer-link {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-ink);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      color: var(--accent-vermilion);
+      letter-spacing: 0.1em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* 頁尾狀態列 */
+    .status-bar {
+      margin-top: 60px;
+      padding: 24px 0;
+      border-top: 1px solid var(--border-ink);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    /* 彈出視窗 Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(28, 26, 23, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--bg-paper);
+      width: 100%;
+      max-width: 860px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border: 1px solid var(--border-ink);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+      position: relative;
+    }
+
+    .modal-header {
+      padding: 30px 40px 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border-ink);
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: var(--text-light);
+      cursor: pointer;
+      line-height: 1;
+      padding: 0 8px;
+    }
+
+    .modal-close-btn:hover {
+      color: var(--accent-vermilion);
+    }
+
+    .modal-body {
+      padding: 40px;
+    }
+
+    .section-block {
+      margin-bottom: 36px;
+    }
+
+    .section-title-bilingual {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      color: var(--accent-vermilion);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title-bilingual::after {
+      content: "";
+      flex-grow: 1;
+      height: 1px;
+      background: var(--border-ink);
+    }
+
+    .section-content {
+      font-size: 1rem;
+      color: var(--text-ink);
+      line-height: 1.9;
+      text-align: justify;
+    }
+
+    /* 審核提示宣告欄位 */
+    .audit-notice {
+      background: rgba(166, 58, 58, 0.05);
+      border-left: 3px solid var(--accent-vermilion);
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    /* 相片牆與可點選放大游標 */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .gallery-card {
+      border: 1px solid var(--border-ink);
+      background: var(--bg-card);
+      padding: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gallery-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(80%) contrast(110%);
+      transition: filter 0.4s ease, transform 0.4s ease;
+      cursor: zoom-in; /* 表示可點選放大 */
+    }
+
+    .gallery-card:hover img {
+      filter: grayscale(0%);
+      transform: scale(1.03);
+    }
+
+    .gallery-caption {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    /* --- 圖片大圖檢視 Lightbox 燈箱 --- */
+    .lightbox-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(18, 16, 14, 0.92);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 30px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .lightbox-overlay.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .lightbox-img-wrapper {
+      max-width: 90vw;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 75vh;
+      object-fit: contain;
+      border: 1px solid var(--border-ink);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .lightbox-caption {
+      font-family: var(--font-serif);
+      color: var(--bg-paper);
+      font-size: 0.95rem;
+      letter-spacing: 0.12em;
+      margin-top: 16px;
+      text-align: center;
+      background: rgba(28, 26, 23, 0.8);
+      padding: 6px 16px;
+      border: 1px solid rgba(224, 216, 203, 0.3);
+    }
+
+    .lightbox-close-btn {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      background: none;
+      border: none;
+      color: var(--bg-paper);
+      font-size: 2.5rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    .lightbox-close-btn:hover {
+      color: var(--accent-vermilion);
+    }
+
+    .map-frame {
+      width: 100%;
+      height: 240px;
+      border: 1px solid var(--border-ink);
+      margin-top: 12px;
+      filter: sepia(20%) grayscale(30%);
+    }
+
+    .btn-action-group {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    .btn-submit {
+      background: var(--accent-vermilion);
+      color: #ffffff;
+      border: 1px solid var(--accent-vermilion);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      padding: 10px 24px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn-submit:hover {
+      background: var(--accent-vermilion-hover);
+    }
+
+    .btn-cancel {
+      background: transparent;
+      color: var(--text-ink);
+      border: 1px solid var(--border-ink);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .hero-header { padding: 60px 20px 40px 20px; }
+      .hero-title { font-size: 1.7rem; }
+      .filter-panel { padding: 20px; gap: 16px; }
+      .cards-grid { grid-template-columns: 1fr; gap: 30px; }
+      .modal-body { padding: 24px; }
+      .modal-header { padding: 20px 24px; }
+      .fab-add-btn { bottom: 24px; right: 24px; width: 52px; height: 52px; font-size: 26px; }
+      .lightbox-close-btn { top: 16px; right: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 頁面頂部：水墨留白標頭 -->
+  <header class="hero-header">
+    <div class="hero-stamp">典藏 Archive</div>
+    <h1 class="hero-title">散步街屋與廢墟典藏</h1>
+    <div class="hero-subtitle-en">Historic Architecture & Ruins Memory</div>
+    <p class="hero-quote">
+      「凝視時光刻痕，紀錄街角落下的歷史碎片。」<br>
+      <span style="font-size:0.85rem; color:var(--text-light); font-family:var(--font-sans);">Tracing time and archiving the silent memories of local architecture.</span>
+    </p>
+  </header>
+
+  <!-- 固定於右下角的極簡圓形加號 (FAB) -->
+  <button class="fab-add-btn" onclick="openUploadModal()" aria-label="新增踏查紀錄">+</button>
+  <div class="fab-tooltip">新增踏查紀錄 | Add Record</div>
+
+  <!-- 主要內容區 -->
+  <main class="main-container">
+
+    <!-- 搜尋與篩選器 -->
+    <section class="filter-panel">
+      <div class="form-group">
+        <label class="form-label" for="searchInput">關鍵字搜尋 <span>Search</span></label>
+        <input type="text" id="searchInput" placeholder="輸入名稱、地點或風格...">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="categoryFilter">建築類別 <span>Category</span></label>
+        <select id="categoryFilter">
+          <option value="ALL">全部類別 | All Categories</option>
+          <option value="宗教場所">宗教場所 | Places of Worship</option>
+          <option value="宅第住宅">宅第住宅 | Historic Residences</option>
+          <option value="水利民生">水利民生 | Public Utilities</option>
+          <option value="產業遺址">產業遺址 | Industrial Heritage</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="dateFilter">訪查年月 <span>Survey Date</span></label>
+        <select id="dateFilter">
+          <option value="ALL">全部日期 | All Dates</option>
+        </select>
+      </div>
+
+      <div>
+        <button class="btn-search" onclick="applyFilters()">篩選資源 | Filter</button>
+      </div>
+    </section>
+
+    <!-- 卡片展示區域 -->
+    <section class="cards-grid" id="cardsContainer"></section>
+
+    <!-- 頁尾狀態列 -->
+    <footer class="status-bar">
+      <span id="statusCount">載入中...</span>
+      <span>散步空間記憶數據庫</span>
+    </footer>
+
+  </main>
+
+  <!-- 詳細資訊 Modal -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div>
+          <span style="font-family:var(--font-sans); font-size:0.75rem; color:var(--accent-vermilion); letter-spacing:0.15em;" id="modalCategory">類別</span>
+          <h2 id="modalTitle" style="font-size:1.8rem; font-weight:400; margin-top:4px;">---</h2>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('detailModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        
+        <!-- 相片牆 (水墨感今昔照片，點擊可放大) -->
+        <div class="section-block">
+          <div class="section-title-bilingual">影像紀錄（點擊相片可放大） <span>Photo Gallery</span></div>
+          <div class="gallery-grid" id="modalGallery"></div>
+        </div>
+
+        <!-- 建築時代 -->
+        <div class="section-block">
+          <div class="section-title-bilingual">建築時代 <span>Era & Chronology</span></div>
+          <div class="section-content" id="modalEra">---</div>
+        </div>
+
+        <!-- 建築特色與風格 -->
+        <div class="section-block">
+          <div class="section-title-bilingual">建築特色與風格 <span>Architectural Style</span></div>
+          <div class="section-content" id="modalStyle">---</div>
+        </div>
+
+        <!-- 文化觀察 -->
+        <div class="section-block">
+          <div class="section-title-bilingual">文化觀察 <span>Cultural Insights</span></div>
+          <div class="section-content" id="modalCulture">---</div>
+        </div>
+
+        <!-- 訪查月曆與地圖 -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 40px;">
+          <div class="section-block" style="margin-bottom:0;">
+            <div class="section-title-bilingual">訪查日期 <span>Survey Calendar</span></div>
+            <div style="font-size: 1.1rem; color: var(--text-ink); margin-top: 8px;" id="modalDate">---</div>
+          </div>
+          <div class="section-block" style="margin-bottom:0;">
+            <div class="section-title-bilingual">地理位置與地圖 <span>Location & Map</span></div>
+            <div style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 8px;" id="modalLocation">---</div>
+            <iframe id="modalMapFrame" class="map-frame" loading="lazy" src=""></iframe>
+          </div>
+        </div>
+
+        <div style="text-align: right; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-ink);">
+          <button class="btn-cancel" onclick="closeModal('detailModal')">關閉視窗 | Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新增踏查紀錄 Modal -->
+  <div class="modal-overlay" id="uploadModal">
+    <div class="modal-box" style="max-width: 600px;">
+      <div class="modal-header">
+        <div>
+          <span style="font-family:var(--font-sans); font-size:0.75rem; color:var(--accent-vermilion); letter-spacing:0.15em;">SUBMISSION</span>
+          <h2 style="font-size:1.5rem; font-weight:400; margin-top:4px;">提供踏查紀錄 | Add Record</h2>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('uploadModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="audit-notice">
+          <b>註冊與審核說明：</b>為維持典藏資料之準確性，您提交的街屋與廢墟踏查紀錄，將經由團隊人工審核後正式公開上傳至典藏資料庫。<br>
+          <span style="font-size:0.75rem;">Note: Submissions will be manually reviewed by our curatorial team before being uploaded to the archive.</span>
+        </div>
+
+        <form id="addForm" onsubmit="handleFormSubmit(event)">
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">建築名稱 <span>Title</span></label>
+            <input type="text" id="newName" required placeholder="例如：阿里山慈雲寺">
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">建築類別 <span>Category</span></label>
+            <select id="newCategory">
+              <option value="宅第住宅">宅第住宅 | Historic Residences</option>
+              <option value="宗教場所">宗教場所 | Places of Worship</option>
+              <option value="水利民生">水利民生 | Public Utilities</option>
+              <option value="產業遺址">產業遺址 | Industrial Heritage</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">建築時代 <span>Era</span></label>
+            <input type="text" id="newEra" required placeholder="例如：日治時期，大正年間">
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">訪查日期 <span>Date</span></label>
+            <input type="date" id="newDate" required>
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">地理位置 <span>Location</span></label>
+            <input type="text" id="newLocation" required placeholder="例如：嘉義縣阿里山鄉">
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">建築特色與簡介 <span>Description</span></label>
+            <textarea id="newStyle" rows="3" required placeholder="請簡述建築構造與風格特色..."></textarea>
+          </div>
+          <div class="form-group" style="margin-bottom:16px;">
+            <label class="form-label">文化觀察 <span>Cultural Observation</span></label>
+            <textarea id="newCulture" rows="2" required placeholder="紀錄這座建築在人文或聚落中的意義..."></textarea>
+          </div>
+          <div class="form-group" style="margin-bottom:24px;">
+            <label class="form-label">上傳踏查照片 <span>Upload Photos</span></label>
+            <input type="file" id="newPhotos" accept="image/*" multiple onchange="previewUploadImages(event)">
+            <div id="uploadPreview" class="gallery-grid" style="margin-top:12px;"></div>
+          </div>
+          <div class="btn-action-group">
+            <button type="button" class="btn-cancel" onclick="closeModal('uploadModal')">取消 | Cancel</button>
+            <button type="submit" class="btn-submit">送出審核 | Submit for Review</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 大圖檢視 Lightbox Modal -->
+  <div class="lightbox-overlay" id="lightboxModal" onclick="closeLightbox(event)">
+    <button class="lightbox-close-btn" onclick="closeLightbox(event)" aria-label="關閉大圖">&times;</button>
+    <div class="lightbox-img-wrapper" onclick="event.stopPropagation()">
+      <img class="lightbox-img" id="lightboxImg" src="" alt="大圖檢視">
+      <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+  </div>
+
+  <script>
+    // 預設 5 筆範例資料
+    let buildingData = [
+      {
+        id: "01",
+        name: "阿里山慈雲寺",
+        category: "宗教場所",
+        categoryEn: "Place of Worship",
+        era: "日治時期，大正年間，約20世紀初期",
+        location: "嘉義縣阿里山鄉",
+        style: "慈雲寺為阿里山地區具有地方特色的佛教寺院，建築形式呈現傳統寺廟與日治時期近代建築的融合。寺院以磚造、木構及傳統屋頂形式為主要特色，反映當時山區宗教空間與生活環境的發展。",
+        culture: "慈雲寺不只是山林中的信仰據點，也映照了阿里山開發與聚落形成過程中，人們如何在森林環境裡建立精神寄託。",
+        date: "2023-12-30",
+        images: [
+          { url: "https://lh3.googleusercontent.com/d/1b5wsMurWPKM4kjalOmjoT7pJNJ8nzMmR", label: "阿里山慈雲寺 外觀" }
+        ],
+        lat: 23.5132, lng: 120.8123
+      },
+      {
+        id: "02",
+        name: "清水黃家瀞園",
+        category: "宅第住宅",
+        categoryEn: "Historic Residence",
+        era: "日治時期，昭和4年（1929）創建，約昭和7年（1932）落成",
+        location: "臺中市清水區大街路",
+        style: "清水黃家瀞園由地方仕紳黃汝舟創建，為日治時期臺灣中上階層宅第的代表之一。整體採二進雙護龍格局，前庭寬廣，並設有半月池與石橋，呈現傳統合院宅第的空間秩序。第一進採折衷式建築風格，融合西洋柱式、拱圈與巴洛克式裝飾語彙；第二進延續傳統閩南建築形式，運用木構架、剪黏、交趾陶與彩繪。",
+        culture: "瀞園像是一座凝結時代的宅邸，從前落的洋式立面到後落的閩南合院，記錄著地方仕紳如何在傳統生活空間中，吸收並轉化外來文化。",
+        date: "2023-01-11",
+        images: [
+          { url: "https://lh3.googleusercontent.com/d/1wuSlvkjks4iRQBp-HaDmnuu8n6M1wR8d", label: "瀞園 立面全景" },
+          { url: "https://lh3.googleusercontent.com/d/1fq_rToyU-gYq5vXeS_7Qrxj_fH3KjCq0", label: "瀞園 西洋柱式細節" },
+          { url: "https://lh3.googleusercontent.com/d/1ax_r1_ctWl1A7-xahqetPTh13xgV2Kzj", label: "瀞園 庭園水池" }
+        ],
+        lat: 24.2691, lng: 120.5734
+      },
+      {
+        id: "03",
+        name: "高雄竹寮取水站",
+        category: "水利民生",
+        categoryEn: "Public Utility",
+        era: "日治時期，大正2年（1913）10月完工啟用",
+        location: "高雄市大樹區竹寮路",
+        style: "竹寮取水站位於高雄市大樹區，是日治時期打狗上水道的重要取水設施。以紅磚砌牆，搭配大跨度木構架與傳統二坡式屋頂。建築具有日治時期洋風建築特色，山牆採弧形立面，並融合不同形式的開窗設計。機房與修護廠以大跨度木構架形成寬敞室內空間，供抽水機具運作。",
+        culture: "竹寮取水站呈現了水利工程如何轉化為城市文明的基礎。紅磚、木構與機械設備不只是工業遺產，也見證了現代公共衛生與都市生活的轉變。",
+        date: "2023-04-16",
+        images: [
+          { url: "https://lh3.googleusercontent.com/d/1rUQk4bZhkfR4LBxJTr6En1Bx9LEDPLYC", label: "竹寮取水站 紅磚立面" },
+          { url: "https://lh3.googleusercontent.com/d/19HX_JLIk2_BXJbUu2cmAkXD5XMHGBAgx", label: "竹寮取水站 弧形山牆" },
+          { url: "https://lh3.googleusercontent.com/d/1-C6FMpiKYO9d0eWkqM_zwGQInd3LzeUd", label: "竹寮取水站 室內構架" }
+        ],
+        lat: 22.6985, lng: 120.4261
+      },
+      {
+        id: "04",
+        name: "苗栗出磺坑",
+        category: "產業遺址",
+        categoryEn: "Industrial Heritage",
+        era: "清代開採起源於1861年；現存主體為日治及戰後1960年代",
+        location: "苗栗縣公館鄉開礦村",
+        style: "臺灣石油產業發展的重要起點。日式宿舍保留日治時期木造宿舍建築特色，例如編竹夾泥牆、榻榻米及緣側等。產業設施包含舊辦公室、醫務室、機具維修設施、油井及運輸系統。山坡地形、纜車運輸路線與石油開採設施相互交織，形成具有產業歷史特色的山城景觀。",
+        culture: "出磺坑是一座由石油串起來的山城。油井、宿舍與運輸設施，記錄著產業如何改變山林地景，也留下工人與眷屬在此生活的痕跡。",
+        date: "2023-09-19",
+        images: [
+          { url: "https://lh3.googleusercontent.com/d/1Z9ubGbq6nHD6vqg3goO4yrFkBi3Kqxix", label: "出磺坑 山城聚落" },
+          { url: "https://lh3.googleusercontent.com/d/1-AY2eALeAxngALc8uaRlCA6DfpYVg4BV", label: "出磺坑 日式木造宿舍" },
+          { url: "https://lh3.googleusercontent.com/d/16Eufyd-FCUXFf0idRUzgivuRZO_71Qq_", label: "出磺坑 纜車軌道歷史地景" },
+          { url: "https://lh3.googleusercontent.com/d/1HB8dudvkjMmuSP4Xk5Rw67P6CbSkf2gc", label: "出磺坑 舊辦公與維修設施" }
+        ],
+        lat: 24.4572, lng: 120.8583
+      },
+      {
+        id: "05",
+        name: "花蓮富里教會禮拜堂",
+        category: "宗教場所",
+        categoryEn: "Place of Worship",
+        era: "創立於1877年；現存禮拜堂於1959年重建獻堂",
+        location: "花蓮縣富里鄉中山路",
+        style: "富里教會是臺灣東部歷史悠久的基督教長老教會之一。舊禮拜堂呈現仿哥德式建築風格，以高聳尖塔、尖拱窗及垂直線條營造莊嚴感。斑駁外牆搭配藍色拱窗，興建時採用當時可取得的材料與工法，部分結構使用角鐵作為大樑，反映戰後地方教會的建築條件。",
+        culture: "富里教會不僅是宗教活動的場所，也是地方居民共同生活與信仰記憶的載體。尖塔與拱窗映照著東部農村的信仰傳承，也見證了地方社群在災後重建中的共同努力。",
+        date: "2026-08-17",
+        images: [
+          { url: "https://lh3.googleusercontent.com/d/1lqTz_SRNHNlD22ScAvyPUnKWcgLkF9T-", label: "富里教會 哥德式尖塔" },
+          { url: "https://lh3.googleusercontent.com/d/1FSMaIRq6J6Hh1uoolWb5i_UBI2rkkVx6", label: "富里教會 藍色拱窗細節" },
+          { url: "https://lh3.googleusercontent.com/d/1xkJm4T_W6mb17GvX2OBZCKJymYzyS_tR", label: "富里教會 禮拜堂全景" }
+        ],
+        lat: 23.1788, lng: 121.2501
+      }
+    ];
+
+    let uploadedTempImages = [];
+
+    // 初始化月份選單
+    function initDateDropdown() {
+      const select = document.getElementById('dateFilter');
+      select.innerHTML = '<option value="ALL">全部日期 | All Dates</option>';
+      const dates = [...new Set(buildingData.map(item => item.date.substring(0, 7)))].sort().reverse();
+      
+      dates.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = `${d.replace('-', '年 ')}月 (${d})`;
+        select.appendChild(opt);
+      });
+    }
+
+    // 渲染卡片
+    function renderCards(data) {
+      const container = document.getElementById('cardsContainer');
+      const statusCount = document.getElementById('statusCount');
+      container.innerHTML = '';
+
+      statusCount.textContent = `共典藏 ${data.length} 筆空間檔案 | Total: ${data.length} records`;
+
+      if (data.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1/-1; padding: 60px 20px; text-align:center; background:var(--bg-card); border:1px solid var(--border-ink);">
+            <p style="font-size:1.1rem; color:var(--text-muted);">未找到符合條件的街屋或廢墟紀錄。</p>
+            <p style="font-size:0.85rem; color:var(--text-light); margin-top:8px;">No architecture records matched your search criteria.</p>
+          </div>`;
+        return;
+      }
+
+      data.forEach(item => {
+        const card = document.createElement('article');
+        card.className = 'card-item';
+        card.onclick = () => openDetailModal(item);
+
+        const coverImg = item.images.length > 0 ? item.images[0].url : '';
+
+        card.innerHTML = `
+          <div class="card-img-wrapper">
+            <span class="card-category-badge">${item.category}</span>
+            <img class="card-img" src="${coverImg}" alt="${item.name}" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'320\' height=\'220\'><rect width=\'100%\' height=\'100%\' fill=\'%23e5dfd3\'/><text x=\'50%\' y=\'50%\' font-size=\'14\' fill=\'%23999185\' text-anchor=\'middle\'>水墨意象整理中</text></svg>';">
+          </div>
+          <div class="card-content">
+            <div>
+              <h3 class="card-title">${item.name}</h3>
+              <div class="card-meta">📍 ${item.location}</div>
+              <div class="card-meta">⏳ ${item.era}</div>
+            </div>
+            <div class="card-footer-link">
+              <span>📅 ${item.date}</span>
+              <span>檢視典藏檔案 ➔</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // 篩選邏輯
+    function applyFilters() {
+      const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
+      const category = document.getElementById('categoryFilter').value;
+      const date = document.getElementById('dateFilter').value;
+
+      const filtered = buildingData.filter(item => {
+        const matchKey = item.name.toLowerCase().includes(keyword) ||
+                         item.style.toLowerCase().includes(keyword) ||
+                         item.location.toLowerCase().includes(keyword) ||
+                         item.era.toLowerCase().includes(keyword);
+        const matchCat = (category === 'ALL') || (item.category === category);
+        const matchDate = (date === 'ALL') || item.date.startsWith(date);
+
+        return matchKey && matchCat && matchDate;
+      });
+
+      renderCards(filtered);
+    }
+
+    // 開啟詳細 modal
+    function openDetailModal(item) {
+      document.getElementById('modalTitle').textContent = item.name;
+      document.getElementById('modalCategory').textContent = `${item.category} | ${item.categoryEn || 'Archive'}`;
+      document.getElementById('modalEra').textContent = item.era;
+      document.getElementById('modalStyle').textContent = item.style;
+      document.getElementById('modalCulture').textContent = item.culture;
+      document.getElementById('modalDate').textContent = item.date;
+      document.getElementById('modalLocation').textContent = item.location;
+
+      const mapFrame = document.getElementById('modalMapFrame');
+      if (item.lat && item.lng) {
+        mapFrame.src = `https://www.openstreetmap.org/export/embed.html?bbox=${item.lng-0.01}%2C${item.lat-0.01}%2C${item.lng+0.01}%2C${item.lat+0.01}&layer=mapnik&marker=${item.lat}%2C${item.lng}`;
+      } else {
+        mapFrame.src = '';
+      }
+
+      const gallery = document.getElementById('modalGallery');
+      gallery.innerHTML = '';
+      
+      if (item.images.length === 0) {
+        gallery.innerHTML = '<div style="color:var(--text-light); font-size:0.9rem;">（暫無影像紀錄）</div>';
+      } else {
+        item.images.forEach(img => {
+          const div = document.createElement('div');
+          div.className = 'gallery-card';
+          div.innerHTML = `
+            <img src="${img.url}" alt="${img.label}" referrerpolicy="no-referrer" onclick="openLightbox('${img.url}', '${img.label.replace(/'/g, "\\'")}')" title="點擊放大檢視" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'160\'><rect width=\'100%\' height=\'100%\' fill=\'%23e5dfd3\'/><text x=\'50%\' y=\'50%\' font-size=\'12\' fill=\'%23999185\' text-anchor=\'middle\'>影像檔案讀取中</text></svg>';">
+            <div class="gallery-caption">${img.label}</div>
+          `;
+          gallery.appendChild(div);
+        });
+      }
+
+      document.getElementById('detailModal').classList.add('active');
+    }
+
+    // 關閉 modal
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    // 開啟圖片大圖 Lightbox
+    function openLightbox(src, caption) {
+      const modal = document.getElementById('lightboxModal');
+      const img = document.getElementById('lightboxImg');
+      const cap = document.getElementById('lightboxCaption');
+      
+      img.src = src;
+      cap.textContent = caption || '';
+      modal.classList.add('active');
+    }
+
+    // 關閉圖片大圖 Lightbox
+    function closeLightbox(e) {
+      if (e) e.stopPropagation();
+      document.getElementById('lightboxModal').classList.remove('active');
+    }
+
+    // 按下 ESC 鍵可自動關閉 Lightbox
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      }
+    });
+
+    // 開啟上傳 modal
+    function openUploadModal() {
+      uploadedTempImages = [];
+      document.getElementById('uploadPreview').innerHTML = '';
+      document.getElementById('addForm').reset();
+      document.getElementById('uploadModal').classList.add('active');
+    }
+
+    // 預覽上傳相片（上傳預覽照片亦可點擊放大）
+    function previewUploadImages(event) {
+      const files = event.target.files;
+      const preview = document.getElementById('uploadPreview');
+      preview.innerHTML = '';
+      uploadedTempImages = [];
+
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedTempImages.push({
+            url: e.target.result,
+            label: file.name
+          });
+
+          const div = document.createElement('div');
+          div.className = 'gallery-card';
+          div.innerHTML = `<img src="${e.target.result}" style="height:100px;" onclick="openLightbox('${e.target.result}', '${file.name}')" title="點擊放大檢視"><div class="gallery-caption">${file.name}</div>`;
+          preview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // 提交表單（提示審核流程）
+    function handleFormSubmit(e) {
+      e.preventDefault();
+
+      alert('踏查紀錄已成功送出！\n我們將於審核確認資料後正式公開上傳至典藏資料庫，感謝您的提供。');
+
+      closeModal('uploadModal');
+    }
+
+    // 事件綁定
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+    document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+    document.getElementById('dateFilter').addEventListener('change', applyFilters);
+
+    window.onload = () => {
+      initDateDropdown();
+      renderCards(buildingData);
+    };
+  </script>
+</body>
+</html>
